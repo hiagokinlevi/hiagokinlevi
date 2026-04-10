@@ -7,22 +7,26 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 90, completed on 2026-04-10  
-**Current focus:** `k1n-cloud-posture-watch`  
-**Latest validated adjustment:** stable posture-report JSON schema for downstream tooling integration.
+**Last portfolio cycle:** Cycle 91, completed on 2026-04-10  
+**Current focus:** `cloud-posture-watch`  
+**Latest validated adjustment:** machine-readable publish blocker categories and safe next-step guidance for restricted automation cycles.
 
 **What changed recently**
 
-- Added `reports.posture_report_schema` with a dependency-free v1 JSON Schema contract, schema ID, version constants, and a lightweight generated-report contract validator
-- Added `$schema` to generated posture JSON reports while preserving the existing `schema_version`, risk model, finding counts, findings, and drift arrays
-- Added `k1n-posture json-schema` so CI jobs, dashboards, and offline review workflows can print the v1 contract from the installed CLI
-- Added regression coverage for schema IDs, required v1 fields, the lightweight validator, and the installed command surface; refreshed `README.md`, `ROADMAP.md`, and `docs/posture-methodology.md`, marking the JSON schema stability roadmap item complete
+- Extended `scripts/repository_publish_preflight.py` with stable `blocker_types` classification for missing repositories, missing git metadata, read-only worktrees, read-only `.git` directories, cached remote lag or divergence, DNS failures, permission-denied fetches, and generic fetch failures
+- Added a machine-readable `next_action` field plus human output so recurring automation can branch cleanly to writable worktrees, DNS retry, reconciliation, or local-validation fallback without scraping free-form blocker text
+- Added regression coverage for blocker categorization and next-action precedence, then refreshed the central README evolution log, roadmap, standards, portfolio status, and JSON preflight note for the Cycle 91 fallback state
 
 **Portfolio status**
 
 - Portfolio backlog: 137 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
+
+**Current publish blocker**
+
+- Target and profile repositories remain read-only in this sandbox, and central reconciliation remains unsafe while git fetch origin --prune fails with Could not resolve host: github.com; the Cycle 90 JSON schema stability change and Cycle 91 preflight guidance update are committed locally and awaiting publication.
+
 
 **Next visible focus**
 
