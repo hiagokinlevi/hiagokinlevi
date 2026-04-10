@@ -7,28 +7,28 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 84, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 86, completed on 2026-04-10  
 **Current focus:** `k1n-cloud-posture-watch`  
-**Latest validated adjustment:** offline Azure RBAC posture review for broad standing access, guest privileged principals, service-principal Owner assignments, delegation gaps, and wildcard custom roles.
+**Latest validated adjustment:** cross-cloud offline IAM comparison report for AWS IAM, Azure RBAC, and GCP IAM evidence.
 
 **What changed recently**
 
-- Added `analyzers.azure_rbac_analyzer` with normalized Azure role assignment and custom role definition models for Azure CLI and Resource Graph export shapes
-- Added `k1n-posture scan-azure-rbac` with repeatable `--trusted-domain`, optional external-principal suppression, severity gating, and Markdown report generation
-- Flagged broad subscription or management-group Owner and Contributor grants, guest or external privileged principals, service-principal Owner assignments, User Access Administrator assignments without condition evidence, and wildcard custom-role Actions/DataActions
-- Added analyzer, loader, and installed-style CLI regression coverage; refreshed README, overview, and posture methodology docs; and marked the Azure RBAC roadmap item complete
+- Added `analyzers.iam_comparison_analyzer` to normalize existing offline AWS IAM, Azure RBAC, and GCP IAM analyzer reports into one comparison model
+- Added `k1n-posture scan-iam-comparison` with at-least-two-cloud input validation, Markdown and JSON report output, provider summaries, identity-theme grouping, and `--fail-on` severity gating
+- Grouped recurring IAM risks into credential hygiene, privileged standing access, external or public access, and custom or wildcard permission themes
+- Added regression coverage for the comparison builder, Markdown output, installed-style CLI report generation, JSON output, and invalid input handling
 
 **Portfolio status**
 
-- Portfolio backlog: 140 open roadmap items across 13 repositories.
+- Portfolio backlog: 139 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Next visible focus**
 
-- Cross-cloud IAM comparison report
 - Watch mode: re-assess on a schedule and alert on new findings
 - Webhook output for Slack / Teams notifications
+- JSON output schema stable for downstream tooling integration
 
 **Automation policy**
 
