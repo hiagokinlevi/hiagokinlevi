@@ -88,6 +88,7 @@ def test_build_activity_block_falls_back_to_markdown_when_json_missing(
     monkeypatch.setattr(activity, "MEMORY", memory)
     monkeypatch.setattr(activity, "STATUS", status_md)
     monkeypatch.setattr(activity, "STATUS_JSON", tmp_path / "missing.json")
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", tmp_path / "missing-automation-memory.md")
 
     block = activity.build_activity_block()
 
@@ -148,6 +149,7 @@ def test_main_updates_readme_with_blocker_from_json(monkeypatch, tmp_path) -> No
     monkeypatch.setattr(activity, "MEMORY", memory)
     monkeypatch.setattr(activity, "STATUS", status_md)
     monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", tmp_path / "missing-automation-memory.md")
 
     activity.main()
     updated = profile_readme.read_text(encoding="utf-8")
@@ -157,3 +159,68 @@ def test_main_updates_readme_with_blocker_from_json(monkeypatch, tmp_path) -> No
     assert "- Added watch-mode state persistence" in updated
     assert "**Current publish blocker**" in updated
     assert "Target and central pushes are DNS-blocked." in updated
+
+
+def test_build_activity_block_prefers_newer_automation_memory(monkeypatch, tmp_path) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 94** on **2026-04-10**\n\n"
+        "## Cycle 94 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: offline AWS RDS encryption and public accessibility review\n"
+        "- Delivered:\n"
+        "  - Added `k1n-posture scan-aws-rds`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Automation Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 95** on **2026-04-10**\n\n"
+        "## Cycle 95 Summary\n\n"
+        "- Target repository: `hiagokinlevi-profile`\n"
+        "- Focus area: profile activity fallback to automation memory when central sync is blocked\n"
+        "- Delivered:\n"
+        "  - Added automation-memory fallback selection\n"
+        "  - Added regression coverage for newer automation cycles\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "cloud-posture-watch",
+                    "priority_rank": 6,
+                    "open_roadmap_items": 4,
+                    "open_roadmap_preview": [
+                        "GitHub Actions marketplace action",
+                        "Azure SQL encryption and firewall rules",
+                    ],
+                    "last_central_preflight_blocker": "Central reconciliation is blocked by DNS and read-only worktrees.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 95, completed on 2026-04-10" in block
+    assert "**Current focus:** `hiagokinlevi-profile`" in block
+    assert "profile activity fallback to automation memory when central sync is blocked" in block
+    assert "- Added automation-memory fallback selection" in block
+    assert "Next completion-first target: `cloud-posture-watch`." in block

@@ -7,15 +7,15 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 94, completed on 2026-04-10  
-**Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** offline AWS RDS encryption and public accessibility review.
+**Last portfolio cycle:** Cycle 95, completed on 2026-04-10  
+**Current focus:** `hiagokinlevi-profile`  
+**Latest validated adjustment:** profile activity fallback to automation memory when central sync is blocked.
 
 **What changed recently**
 
-- Added `analyzers.aws_rds_analyzer` to normalize approved `describe-db-instances` and optional `describe-db-clusters` JSON exports into offline DB instance and cluster evidence
-- Added `k1n-posture scan-aws-rds` with severity gating, wrapped-response support, and Markdown report output for unencrypted storage, public RDS instances, and public DB subnet group placement
-- Added regression coverage for loader shapes, analyzer findings, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the AWS RDS roadmap item complete
+- Added automation-memory fallback selection to `scripts/update_cyber_port_activity.py` so the public latest-activity block can reflect the newest validated cycle when `/Users/hiagokin/k1N-Cyber-Port/MEMORY.md` is stale or blocked from updates
+- Added regression coverage for newer automation-memory cycle selection in `tests/test_update_cyber_port_activity.py`
+- Documented the fallback behavior in the profile `README.md`
 
 **Portfolio status**
 
@@ -54,4 +54,5 @@ Cyber Port runs as a continuous automatic improvement loop. Each cycle updates t
 - Defensive and authorized security work only.
 - Practical tools with tests, documentation, and repeatable validation.
 - Continuous improvement through numbered Cyber Port cycles.
+- The profile activity updater can fall back to automation memory when central index sync is blocked, keeping the public latest-activity block aligned with the newest validated cycle.
 - Public educational value without malware, exploit kits, bypass guidance, or unsafe abuse workflows.

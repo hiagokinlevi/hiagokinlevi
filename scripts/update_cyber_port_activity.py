@@ -8,8 +8,9 @@ repositories themselves.
 
 from __future__ import annotations
 
-import re
+import os
 import json
+import re
 from pathlib import Path
 
 
@@ -18,6 +19,12 @@ CYBER_PORT_ROOT = Path("/Users/hiagokin/k1N-Cyber-Port")
 MEMORY = CYBER_PORT_ROOT / "MEMORY.md"
 STATUS = CYBER_PORT_ROOT / "PORTFOLIO_STATUS.md"
 STATUS_JSON = CYBER_PORT_ROOT / "portfolio-status.json"
+AUTOMATION_MEMORY = Path(
+    os.environ.get(
+        "CYBER_PORT_AUTOMATION_MEMORY",
+        str(Path.home() / ".codex" / "automations" / "cyber-port-continuous" / "memory.md"),
+    )
+)
 START = "<!-- CYBER_PORT_ACTIVITY:START -->"
 END = "<!-- CYBER_PORT_ACTIVITY:END -->"
 
@@ -38,6 +45,30 @@ def _latest_cycle(memory_text: str) -> tuple[str, str]:
     if not match:
         return "Unknown cycle", "unknown date"
     return match.group(1), match.group(2)
+
+
+def _cycle_number(cycle: str) -> int:
+    """Return the numeric portion of a cycle label for stable comparisons."""
+    match = re.search(r"Cycle (\d+)", cycle)
+    return int(match.group(1)) if match else -1
+
+
+def _latest_memory_source() -> tuple[str, str, str]:
+    """Choose the newest readable memory source between central and automation memory."""
+    candidates: list[tuple[int, str, str, str]] = []
+    for label, path in (("central", MEMORY), ("automation", AUTOMATION_MEMORY)):
+        try:
+            text = _read(path)
+        except FileNotFoundError:
+            continue
+        cycle, date = _latest_cycle(text)
+        candidates.append((_cycle_number(cycle), cycle, date, text))
+    if not candidates:
+        text = _read(MEMORY)
+        cycle, date = _latest_cycle(text)
+        return cycle, date, text
+    _, cycle, date, text = max(candidates, key=lambda item: item[0])
+    return cycle, date, text
 
 
 def _cycle_section(memory_text: str, cycle: str) -> str:
@@ -141,8 +172,7 @@ def _portfolio_summary_from_markdown(status_text: str) -> tuple[str, str, list[s
 
 def build_activity_block() -> str:
     """Build the public Cyber Port activity block."""
-    memory_text = _read(MEMORY)
-    cycle, date = _latest_cycle(memory_text)
+    cycle, date, memory_text = _latest_memory_source()
     section = _cycle_section(memory_text, cycle)
 
     raw_target = _first_value(section, "Target repository", "`cloud-posture-watch`")
