@@ -7,33 +7,30 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 99, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 100, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** profile activity fallback parser hardening for concise automation memory.
+**Latest validated adjustment:** offline AWS managed secrets correlation and hardcoded credential hygiene.
 
 **What changed recently**
 
-- Hardened `scripts/update_cyber_port_activity.py` so the public profile updater now recognizes concise automation-memory entries like `Completed Cycle 99 ...` and can still derive the cycle date from the recorded runtime when the central index is blocked.
-- Added regression coverage for concise automation-memory parsing and for preferring a newer concise automation cycle over an older central memory entry.
-- Prepared the profile README activity block to promote Cycle 99 from automation memory instead of stalling on the central index sync blocker.
+- Added `analyzers.aws_secrets_analyzer` to normalize approved AWS Secrets Manager and SSM Parameter Store inventory plus optional hardcoded credential evidence, correlate credential-like identifiers to managed secret names, and detect plaintext credential-bearing SSM `String` parameters
+- Added `k1n-posture scan-aws-secrets` with severity gating and Markdown report output for hardcoded credentials that duplicate a managed AWS secret, hardcoded credentials that still lack a managed-secret counterpart, and credential-like SSM parameters that remain plaintext
+- Added regression coverage for loader normalization, analyzer matching, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the AWS secrets roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 133 open roadmap items across 13 repositories.
+- Portfolio backlog: 132 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `k1N-Cyber-Port` cannot be updated or reconciled in this sandbox because its worktree and `.git` metadata are read-only here.
-- `cloud-posture-watch` is also read-only here, so the next completion-first roadmap item cannot be implemented from this run.
-- GitHub DNS remains unavailable for the profile repository, preventing `git fetch` or `git push` to `origin`.
+- Next target: keep `k1n-cloud-posture-watch` completion-first for the remaining GitHub Actions marketplace action once publication and reconciliation are available.
 
 
 **Next visible focus**
 
 - GitHub Actions marketplace action
-- AWS Secrets Manager / Parameter Store vs. hardcoded credential heuristic
 
 **Automation policy**
 
