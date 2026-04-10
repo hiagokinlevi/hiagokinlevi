@@ -7,28 +7,28 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 88, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 90, completed on 2026-04-10  
 **Current focus:** `k1n-cloud-posture-watch`  
-**Latest validated adjustment:** Slack and Microsoft Teams webhook notifications for saved posture reports.
+**Latest validated adjustment:** stable posture-report JSON schema for downstream tooling integration.
 
 **What changed recently**
 
-- Added `reports.webhook_notifications` to build dependency-free Slack and Teams incoming-webhook payloads from saved JSON posture reports
-- Added `k1n-posture notify-webhook` with `--target slack|teams`, `--dashboard-url`, `--dry-run`, HTTPS webhook validation, timeout control, and success output that does not print the webhook secret
-- Added regression coverage for Slack payload summaries, Teams MessageCard payloads, dry-run CLI output, missing-webhook validation, and secret-safe success output
-- Refreshed `k1n-cloud-posture-watch` README, overview, posture methodology, and roadmap docs, marking the Slack/Teams webhook roadmap item complete
+- Added `reports.posture_report_schema` with a dependency-free v1 JSON Schema contract, schema ID, version constants, and a lightweight generated-report contract validator
+- Added `$schema` to generated posture JSON reports while preserving the existing `schema_version`, risk model, finding counts, findings, and drift arrays
+- Added `k1n-posture json-schema` so CI jobs, dashboards, and offline review workflows can print the v1 contract from the installed CLI
+- Added regression coverage for schema IDs, required v1 fields, the lightweight validator, and the installed command surface; refreshed `README.md`, `ROADMAP.md`, and `docs/posture-methodology.md`, marking the JSON schema stability roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 138 open roadmap items across 13 repositories.
+- Portfolio backlog: 137 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Next visible focus**
 
 - Watch mode: re-assess on a schedule and alert on new findings
-- JSON output schema stable for downstream tooling integration
 - GitHub Actions marketplace action
+- AWS RDS encryption and public accessibility check
 
 **Automation policy**
 
