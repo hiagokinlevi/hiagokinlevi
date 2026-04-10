@@ -54,20 +54,27 @@ def _cycle_number(cycle: str) -> int:
 
 
 def _latest_memory_source() -> tuple[str, str, str]:
-    """Choose the newest readable memory source between central and automation memory."""
-    candidates: list[tuple[int, str, str, str]] = []
+    """Choose the newest readable memory source with a completed cycle summary."""
+    candidates: list[tuple[int, str, str, str, bool]] = []
     for label, path in (("central", MEMORY), ("automation", AUTOMATION_MEMORY)):
         try:
             text = _read(path)
         except FileNotFoundError:
             continue
         cycle, date = _latest_cycle(text)
-        candidates.append((_cycle_number(cycle), cycle, date, text))
+        has_summary = bool(_cycle_section(text, cycle))
+        candidates.append((_cycle_number(cycle), cycle, date, text, has_summary))
     if not candidates:
         text = _read(MEMORY)
         cycle, date = _latest_cycle(text)
         return cycle, date, text
-    _, cycle, date, text = max(candidates, key=lambda item: item[0])
+
+    completed = [item for item in candidates if item[4]]
+    if completed:
+        _, cycle, date, text, _ = max(completed, key=lambda item: item[0])
+        return cycle, date, text
+
+    _, cycle, date, text, _ = max(candidates, key=lambda item: item[0])
     return cycle, date, text
 
 

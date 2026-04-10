@@ -224,3 +224,63 @@ def test_build_activity_block_prefers_newer_automation_memory(monkeypatch, tmp_p
     assert "profile activity fallback to automation memory when central sync is blocked" in block
     assert "- Added automation-memory fallback selection" in block
     assert "Next completion-first target: `cloud-posture-watch`." in block
+
+
+def test_build_activity_block_ignores_incomplete_newer_automation_cycle(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 96** on **2026-04-10**\n\n"
+        "## Cycle 96 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: offline Azure SQL encryption and firewall review\n"
+        "- Delivered:\n"
+        "  - Added `k1n-posture scan-azure-sql`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Automation Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 97** on **2026-04-10**\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "cloud-posture-watch",
+                    "priority_rank": 6,
+                    "open_roadmap_items": 3,
+                    "open_roadmap_preview": [
+                        "GitHub Actions marketplace action",
+                        "GCP Cloud SQL public IP and SSL enforcement",
+                    ],
+                    "last_central_preflight_blocker": "Central reconciliation remains blocked.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 96, completed on 2026-04-10" in block
+    assert "**Current focus:** `cloud-posture-watch`" in block
+    assert "offline Azure SQL encryption and firewall review" in block
+    assert "- Added `k1n-posture scan-azure-sql`" in block

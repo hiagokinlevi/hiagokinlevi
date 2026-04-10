@@ -7,15 +7,15 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 96, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 97, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** offline Azure SQL encryption and firewall review.
+**Latest validated adjustment:** profile activity update safety when automation memory advances before a full cycle summary lands.
 
 **What changed recently**
 
-- Added `analyzers.azure_sql_analyzer` to normalize approved Azure SQL logical server and database exports, including wrapped response shapes and embedded firewall-rule evidence
-- Added `k1n-posture scan-azure-sql` with severity gating and Markdown report output for disabled Transparent Data Encryption, public network access, Azure-services firewall exposure, and broad public firewall ranges
-- Added regression coverage for export loading, analyzer findings, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the Azure SQL roadmap item complete
+- Hardened `scripts/update_cyber_port_activity.py` so the public profile only promotes the newest readable cycle that already includes a full `## Cycle N Summary`
+- Added regression coverage proving incomplete newer automation-memory entries do not replace a fully recorded central cycle
+- Updated the profile README operating principles to document that partial automation writes are not surfaced as completed public activity
 
 **Portfolio status**
 
@@ -55,4 +55,5 @@ Cyber Port runs as a continuous automatic improvement loop. Each cycle updates t
 - Practical tools with tests, documentation, and repeatable validation.
 - Continuous improvement through numbered Cyber Port cycles.
 - The profile activity updater can fall back to automation memory when central index sync is blocked, keeping the public latest-activity block aligned with the newest validated cycle.
+- The profile activity updater only promotes a cycle after a full `## Cycle N Summary` is present, preventing partial automation writes from surfacing as completed public activity.
 - Public educational value without malware, exploit kits, bypass guidance, or unsafe abuse workflows.
