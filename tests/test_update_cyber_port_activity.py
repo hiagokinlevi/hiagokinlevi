@@ -284,3 +284,147 @@ def test_build_activity_block_ignores_incomplete_newer_automation_cycle(
     assert "**Current focus:** `cloud-posture-watch`" in block
     assert "offline Azure SQL encryption and firewall review" in block
     assert "- Added `k1n-posture scan-azure-sql`" in block
+
+
+def test_latest_cycle_supports_concise_automation_memory_format() -> None:
+    cycle, date = activity._latest_cycle(
+        "# Cyber Port Continuous Memory\n\n"
+        "- Runtime: 2026-04-10T23:35:21Z\n"
+        "- Completed Cycle 99 in `hiagokinlevi-profile`: hardened profile activity fallback parsing.\n"
+    )
+
+    assert cycle == "Cycle 99"
+    assert date == "2026-04-10"
+
+
+def test_build_activity_block_prefers_newer_concise_automation_cycle(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 98** on **2026-04-10**\n\n"
+        "## Cycle 98 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: offline GCP Cloud SQL public IP and SSL/TLS review\n"
+        "- Delivered:\n"
+        "  - Added `k1n-posture scan-gcp-cloud-sql`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Continuous Memory\n\n"
+        "- Runtime: 2026-04-10T23:35:21Z\n"
+        "- Completed Cycle 99 in `hiagokinlevi-profile`: profile activity fallback parser hardening.\n\n"
+        "## Cycle 99 Summary\n\n"
+        "- Target repository: `hiagokinlevi-profile`\n"
+        "- Focus area: profile activity fallback parser hardening for concise automation memory\n"
+        "- Delivered:\n"
+        "  - Added concise automation-memory cycle parsing\n"
+        "  - Added regression coverage for concise memory selection\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "cloud-posture-watch",
+                    "priority_rank": 6,
+                    "open_roadmap_items": 2,
+                    "open_roadmap_preview": [
+                        "GitHub Actions marketplace action",
+                        "AWS Secrets Manager / Parameter Store vs. hardcoded credential heuristic",
+                    ],
+                    "last_central_preflight_blocker": "Central reconciliation and publishing remain blocked by GitHub DNS failure.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 99, completed on 2026-04-10" in block
+    assert "**Current focus:** `hiagokinlevi-profile`" in block
+    assert "profile activity fallback parser hardening for concise automation memory" in block
+    assert "- Added concise automation-memory cycle parsing" in block
+
+
+def test_build_activity_block_prefers_cycle_blockers_over_stale_status_json(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 98** on **2026-04-10**\n\n"
+        "## Cycle 98 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: offline GCP Cloud SQL public IP and SSL/TLS review\n"
+        "- Delivered:\n"
+        "  - Added `k1n-posture scan-gcp-cloud-sql`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Continuous Memory\n\n"
+        "- Runtime: 2026-04-10T23:35:21Z\n"
+        "- Completed Cycle 99 in `hiagokinlevi-profile`: profile activity fallback parser hardening.\n\n"
+        "## Cycle 99 Summary\n\n"
+        "- Target repository: `hiagokinlevi-profile`\n"
+        "- Focus area: profile activity fallback parser hardening for concise automation memory\n"
+        "- Delivered:\n"
+        "  - Added concise automation-memory cycle parsing\n"
+        "- Blockers:\n"
+        "  - Central and target fetch attempts are blocked by sandbox permissions opening `.git/FETCH_HEAD`.\n"
+        "  - Profile fetch and push remain blocked by `Could not resolve host: github.com`.\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "cloud-posture-watch",
+                    "priority_rank": 6,
+                    "open_roadmap_items": 2,
+                    "open_roadmap_preview": [
+                        "GitHub Actions marketplace action",
+                        "AWS Secrets Manager / Parameter Store vs. hardcoded credential heuristic",
+                    ],
+                    "last_central_preflight_blocker": "Stale blocker text from the older central index.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "Central and target fetch attempts are blocked by sandbox permissions" in block
+    assert "Profile fetch and push remain blocked by `Could not resolve host: github.com`." in block
+    assert "Stale blocker text from the older central index." not in block

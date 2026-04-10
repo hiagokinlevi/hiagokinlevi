@@ -7,15 +7,15 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 98, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 99, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** offline GCP Cloud SQL public IP and SSL/TLS review.
+**Latest validated adjustment:** profile activity fallback parser hardening for concise automation memory.
 
 **What changed recently**
 
-- Added `analyzers.gcp_cloud_sql_analyzer` to normalize approved `gcloud sql instances list --format=json` exports, including wrapped response shapes, public IP evidence, SSL/TLS controls, and authorized-network ranges
-- Added `k1n-posture scan-gcp-cloud-sql` with severity gating and Markdown report output for public IPv4 exposure, missing SSL/TLS enforcement, and broad authorized networks
-- Added regression coverage for loader shapes, analyzer findings, and CLI gating; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the GCP Cloud SQL roadmap item complete
+- Hardened `scripts/update_cyber_port_activity.py` so the public profile updater now recognizes concise automation-memory entries like `Completed Cycle 99 ...` and can still derive the cycle date from the recorded runtime when the central index is blocked.
+- Added regression coverage for concise automation-memory parsing and for preferring a newer concise automation cycle over an older central memory entry.
+- Prepared the profile README activity block to promote Cycle 99 from automation memory instead of stalling on the central index sync blocker.
 
 **Portfolio status**
 
@@ -25,7 +25,9 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 
 **Current publish blocker**
 
-- Cycle 98 validated the local cloud-posture-watch GCP Cloud SQL completion commit 7219580 and the target worktree is clean again, but central and target git fetch or push still fail with Could not resolve host: github.com while the central index remains diverged from origin, so publication and reconciliation remain blocked.
+- `k1N-Cyber-Port` cannot be updated or reconciled in this sandbox because its worktree and `.git` metadata are read-only here.
+- `cloud-posture-watch` is also read-only here, so the next completion-first roadmap item cannot be implemented from this run.
+- GitHub DNS remains unavailable for the profile repository, preventing `git fetch` or `git push` to `origin`.
 
 
 **Next visible focus**

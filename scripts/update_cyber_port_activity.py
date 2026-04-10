@@ -42,9 +42,17 @@ def _latest_cycle(memory_text: str) -> tuple[str, str]:
         r"Last completed cycle:\s+\*\*(Cycle \d+)\*\* on \*\*([^*]+)\*\*",
         memory_text,
     )
-    if not match:
+    if match:
+        return match.group(1), match.group(2)
+
+    concise_cycle = re.search(r"Completed (Cycle \d+)\b", memory_text)
+    if not concise_cycle:
         return "Unknown cycle", "unknown date"
-    return match.group(1), match.group(2)
+
+    runtime = re.search(r"^- Runtime:\s+(\d{4}-\d{2}-\d{2})T", memory_text, re.MULTILINE)
+    if runtime:
+        return concise_cycle.group(1), runtime.group(1)
+    return concise_cycle.group(1), "unknown date"
 
 
 def _cycle_number(cycle: str) -> int:
@@ -107,6 +115,16 @@ def _bullets_after(section: str, heading: str, limit: int = 4) -> list[str]:
         if len(bullets) >= limit:
             break
     return bullets
+
+
+def _blocker_lines(section: str, fallback: str | None) -> list[str]:
+    """Prefer blocker bullets from the latest cycle summary over stale status data."""
+    blockers = _bullets_after(section, "Blockers", limit=4)
+    if blockers:
+        return blockers
+    if fallback:
+        return [fallback]
+    return []
 
 
 def _read_portfolio_status_json(path: Path | None = None) -> list[dict]:
@@ -193,15 +211,17 @@ def build_activity_block() -> str:
         status_text = _read(STATUS)
         backlog, next_repo, gaps = _portfolio_summary_from_markdown(status_text)
     target = _display_target(raw_target, next_repo)
+    blocker_lines = _blocker_lines(section, blocker)
 
     delivered_lines = "\n".join(f"- {item}" for item in delivered) or "- Latest cycle details are being synchronized."
     gap_lines = "\n".join(f"- {item}" for item in gaps) or f"- Continue completion-first work in `{next_repo}`."
     blocker_block = ""
-    if blocker:
+    if blocker_lines:
+        rendered_blockers = "\n".join(f"- {item}" for item in blocker_lines)
         blocker_block = f"""
 **Current publish blocker**
 
-- {blocker}
+{rendered_blockers}
 """
 
     return f"""{START}
