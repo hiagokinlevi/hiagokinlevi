@@ -7,32 +7,32 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 95, completed on 2026-04-10  
-**Current focus:** `hiagokinlevi-profile`  
-**Latest validated adjustment:** profile activity fallback to automation memory when central sync is blocked.
+**Last portfolio cycle:** Cycle 96, completed on 2026-04-10  
+**Current focus:** `cloud-posture-watch`  
+**Latest validated adjustment:** offline Azure SQL encryption and firewall review.
 
 **What changed recently**
 
-- Added automation-memory fallback selection to `scripts/update_cyber_port_activity.py` so the public latest-activity block can reflect the newest validated cycle when `/Users/hiagokin/k1N-Cyber-Port/MEMORY.md` is stale or blocked from updates
-- Added regression coverage for newer automation-memory cycle selection in `tests/test_update_cyber_port_activity.py`
-- Documented the fallback behavior in the profile `README.md`
+- Added `analyzers.azure_sql_analyzer` to normalize approved Azure SQL logical server and database exports, including wrapped response shapes and embedded firewall-rule evidence
+- Added `k1n-posture scan-azure-sql` with severity gating and Markdown report output for disabled Transparent Data Encryption, public network access, Azure-services firewall exposure, and broad public firewall ranges
+- Added regression coverage for export loading, analyzer findings, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the Azure SQL roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 135 open roadmap items across 13 repositories.
+- Portfolio backlog: 134 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- Cloud-posture-watch now has the local Cycle 94 AWS RDS commit 50b6390, but git fetch origin --prune and git push origin main still fail with Could not resolve host: github.com; central k1N-Cyber-Port also remains ahead 105 and behind 7, so target and central publication stay blocked pending safe reconciliation.
+- Cycle 96 recorded the local cloud-posture-watch Azure SQL completion commit 2a77593, but git fetch origin --prune and git push origin main still fail with Could not resolve host: github.com; central k1N-Cyber-Port also remains ahead and behind origin, so publication stays blocked pending safe reconciliation.
 
 
 **Next visible focus**
 
 - GitHub Actions marketplace action
-- Azure SQL encryption and firewall rules
 - GCP Cloud SQL public IP and SSL enforcement
+- AWS Secrets Manager / Parameter Store vs. hardcoded credential heuristic
 
 **Automation policy**
 
