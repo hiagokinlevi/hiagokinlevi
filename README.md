@@ -7,28 +7,28 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 86, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 88, completed on 2026-04-10  
 **Current focus:** `k1n-cloud-posture-watch`  
-**Latest validated adjustment:** cross-cloud offline IAM comparison report for AWS IAM, Azure RBAC, and GCP IAM evidence.
+**Latest validated adjustment:** Slack and Microsoft Teams webhook notifications for saved posture reports.
 
 **What changed recently**
 
-- Added `analyzers.iam_comparison_analyzer` to normalize existing offline AWS IAM, Azure RBAC, and GCP IAM analyzer reports into one comparison model
-- Added `k1n-posture scan-iam-comparison` with at-least-two-cloud input validation, Markdown and JSON report output, provider summaries, identity-theme grouping, and `--fail-on` severity gating
-- Grouped recurring IAM risks into credential hygiene, privileged standing access, external or public access, and custom or wildcard permission themes
-- Added regression coverage for the comparison builder, Markdown output, installed-style CLI report generation, JSON output, and invalid input handling
+- Added `reports.webhook_notifications` to build dependency-free Slack and Teams incoming-webhook payloads from saved JSON posture reports
+- Added `k1n-posture notify-webhook` with `--target slack|teams`, `--dashboard-url`, `--dry-run`, HTTPS webhook validation, timeout control, and success output that does not print the webhook secret
+- Added regression coverage for Slack payload summaries, Teams MessageCard payloads, dry-run CLI output, missing-webhook validation, and secret-safe success output
+- Refreshed `k1n-cloud-posture-watch` README, overview, posture methodology, and roadmap docs, marking the Slack/Teams webhook roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 139 open roadmap items across 13 repositories.
+- Portfolio backlog: 138 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Next visible focus**
 
 - Watch mode: re-assess on a schedule and alert on new findings
-- Webhook output for Slack / Teams notifications
 - JSON output schema stable for downstream tooling integration
+- GitHub Actions marketplace action
 
 **Automation policy**
 
