@@ -7,31 +7,30 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 97, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 98, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** profile activity update safety when automation memory advances before a full cycle summary lands.
+**Latest validated adjustment:** offline GCP Cloud SQL public IP and SSL/TLS review.
 
 **What changed recently**
 
-- Hardened `scripts/update_cyber_port_activity.py` so the public profile only promotes the newest readable cycle that already includes a full `## Cycle N Summary`
-- Added regression coverage proving incomplete newer automation-memory entries do not replace a fully recorded central cycle
-- Updated the profile README operating principles to document that partial automation writes are not surfaced as completed public activity
+- Added `analyzers.gcp_cloud_sql_analyzer` to normalize approved `gcloud sql instances list --format=json` exports, including wrapped response shapes, public IP evidence, SSL/TLS controls, and authorized-network ranges
+- Added `k1n-posture scan-gcp-cloud-sql` with severity gating and Markdown report output for public IPv4 exposure, missing SSL/TLS enforcement, and broad authorized networks
+- Added regression coverage for loader shapes, analyzer findings, and CLI gating; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the GCP Cloud SQL roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 134 open roadmap items across 13 repositories.
+- Portfolio backlog: 133 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- Cycle 96 recorded the local cloud-posture-watch Azure SQL completion commit 2a77593, but git fetch origin --prune and git push origin main still fail with Could not resolve host: github.com; central k1N-Cyber-Port also remains ahead and behind origin, so publication stays blocked pending safe reconciliation.
+- Cycle 98 validated the local cloud-posture-watch GCP Cloud SQL completion commit 7219580 and the target worktree is clean again, but central and target git fetch or push still fail with Could not resolve host: github.com while the central index remains diverged from origin, so publication and reconciliation remain blocked.
 
 
 **Next visible focus**
 
 - GitHub Actions marketplace action
-- GCP Cloud SQL public IP and SSL enforcement
 - AWS Secrets Manager / Parameter Store vs. hardcoded credential heuristic
 
 **Automation policy**
