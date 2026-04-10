@@ -7,32 +7,32 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 92, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 94, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** scheduled watch mode for saved posture-report JSON artifacts.
+**Latest validated adjustment:** offline AWS RDS encryption and public accessibility review.
 
 **What changed recently**
 
-- Added `reports.watch_mode` to diff current versus previous posture snapshots, track new/resolved/persistent findings, gate alerts by severity, and persist watch state between scheduled runs
-- Added `k1n-posture watch-report` with `--state-file`, explicit `--previous` support, first-run suppression, and optional Slack/Teams alert delivery or dry-run payload review
-- Added regression coverage for diff classification, first-run alert gating, state-file updates, and CLI dry-run output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the watch-mode roadmap item complete
+- Added `analyzers.aws_rds_analyzer` to normalize approved `describe-db-instances` and optional `describe-db-clusters` JSON exports into offline DB instance and cluster evidence
+- Added `k1n-posture scan-aws-rds` with severity gating, wrapped-response support, and Markdown report output for unencrypted storage, public RDS instances, and public DB subnet group placement
+- Added regression coverage for loader shapes, analyzer findings, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the AWS RDS roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 136 open roadmap items across 13 repositories.
+- Portfolio backlog: 135 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- The target, central index, and profile repositories all still fail git fetch origin --prune with Could not resolve host: github.com, so the Cycle 92 watch-mode change and central/profile sync commits remain local and awaiting publication.
+- Cloud-posture-watch now has the local Cycle 94 AWS RDS commit 50b6390, but git fetch origin --prune and git push origin main still fail with Could not resolve host: github.com; central k1N-Cyber-Port also remains ahead 105 and behind 7, so target and central publication stay blocked pending safe reconciliation.
 
 
 **Next visible focus**
 
 - GitHub Actions marketplace action
-- AWS RDS encryption and public accessibility check
 - Azure SQL encryption and firewall rules
+- GCP Cloud SQL public IP and SSL enforcement
 
 **Automation policy**
 
