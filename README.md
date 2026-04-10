@@ -7,32 +7,32 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 91, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 92, completed on 2026-04-10  
 **Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** machine-readable publish blocker categories and safe next-step guidance for restricted automation cycles.
+**Latest validated adjustment:** scheduled watch mode for saved posture-report JSON artifacts.
 
 **What changed recently**
 
-- Extended `scripts/repository_publish_preflight.py` with stable `blocker_types` classification for missing repositories, missing git metadata, read-only worktrees, read-only `.git` directories, cached remote lag or divergence, DNS failures, permission-denied fetches, and generic fetch failures
-- Added a machine-readable `next_action` field plus human output so recurring automation can branch cleanly to writable worktrees, DNS retry, reconciliation, or local-validation fallback without scraping free-form blocker text
-- Added regression coverage for blocker categorization and next-action precedence, then refreshed the central README evolution log, roadmap, standards, portfolio status, and JSON preflight note for the Cycle 91 fallback state
+- Added `reports.watch_mode` to diff current versus previous posture snapshots, track new/resolved/persistent findings, gate alerts by severity, and persist watch state between scheduled runs
+- Added `k1n-posture watch-report` with `--state-file`, explicit `--previous` support, first-run suppression, and optional Slack/Teams alert delivery or dry-run payload review
+- Added regression coverage for diff classification, first-run alert gating, state-file updates, and CLI dry-run output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the watch-mode roadmap item complete
 
 **Portfolio status**
 
-- Portfolio backlog: 137 open roadmap items across 13 repositories.
+- Portfolio backlog: 136 open roadmap items across 13 repositories.
 - Next completion-first target: `cloud-posture-watch`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- Target and profile repositories remain read-only in this sandbox, and central reconciliation remains unsafe while git fetch origin --prune fails with Could not resolve host: github.com; the Cycle 90 JSON schema stability change and Cycle 91 preflight guidance update are committed locally and awaiting publication.
+- The target, central index, and profile repositories all still fail git fetch origin --prune with Could not resolve host: github.com, so the Cycle 92 watch-mode change and central/profile sync commits remain local and awaiting publication.
 
 
 **Next visible focus**
 
-- Watch mode: re-assess on a schedule and alert on new findings
 - GitHub Actions marketplace action
 - AWS RDS encryption and public accessibility check
+- Azure SQL encryption and firewall rules
 
 **Automation policy**
 
