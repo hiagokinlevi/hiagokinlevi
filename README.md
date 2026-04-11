@@ -7,34 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 109, completed on 2026-04-11  
+**Last portfolio cycle:** Cycle 110, completed on 2026-04-11  
 **Current focus:** `secret-leak-sentinel`  
-**Latest validated adjustment:** skip guaranteed `FETCH_HEAD` permission failures when `--fetch` is requested from read-only repository checkouts.
+**Latest validated adjustment:** detect JWT bearer tokens that are unsigned or rely on HMAC signing, while preserving narrow false-positive control.
 
 **What changed recently**
 
-- Hardened central `scripts/repository_publish_preflight.py` so it now resolves linked-worktree git metadata paths before writability checks, which keeps the preflight accurate for normal repositories and pointer-based worktrees
-- Taught the fetch path to skip attempts when the resolved git metadata directory is not writable, recording `fetch-skipped-read-only-git-dir` instead of retrying a fetch that cannot create `FETCH_HEAD`
-- Added focused regression coverage for linked `.git` pointer resolution, skipped-fetch blocker classification, and next-action routing, then refreshed central `README.md`, `ROADMAP.md`, `STANDARDS.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 109 records the new fallback behavior while preserving `secret-leak-sentinel` as the next real target
+- Added `jwt_weak_or_unsigned` coverage to `secret-leak-sentinel`'s primary regex detector, then base64url-decodes JWT headers so only `alg: none` and `HS256` / `HS384` / `HS512` bearer tokens are emitted as findings
+- Added focused regression coverage for unsigned JWTs, HMAC-signed JWTs, invalid JWT headers, RS256 exclusions, and masked excerpts, then refreshed the target README, roadmap, and detection methodology docs
+- Updated the central `README.md`, `MEMORY.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 110 records the new target commit, reduced roadmap count, and the next completion-first target while preserving the CC BY 4.0 baseline
 
 **Portfolio status**
 
-- Portfolio backlog: 131 open roadmap items across 13 repositories.
+- Portfolio backlog: 130 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `git fetch`/`git push` against GitHub still cannot complete safely from the central index because outbound DNS remains unavailable and `k1N-Cyber-Port` is still `ahead 119, behind 8`
-- `secret-leak-sentinel` and `/Users/hiagokin/hiagokinlevi-profile` remain read-only from this run, so target edits, target commits, and the required profile README activity refresh cannot be written back here
-- The active target checkout is also already dirty, which keeps it out of read-only validation mode in the current sandbox
+- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
+- `k1N-Cyber-Port` still remains locally diverged from `origin/main` (`ahead 119, behind 8`), so direct central publication is unsafe even after the new target commit
+- The default-interpreter `python3 -m secret_leak_sentinel_cli list-detectors` path still lacks `python-dotenv`, so the maintained Miniconda runtime remains the trusted CLI validation baseline here
 
 
 **Next visible focus**
 
-- JWT token detection (unsigned or weak-signature JWTs)
 - HashiCorp Vault tokens
 - Deep git log scan (all commits in history, not just current tree)
+- Blob deduplication to avoid rescanning unchanged file content
 
 **Automation policy**
 
