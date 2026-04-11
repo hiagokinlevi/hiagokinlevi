@@ -297,6 +297,18 @@ def test_latest_cycle_supports_concise_automation_memory_format() -> None:
     assert date == "2026-04-10"
 
 
+def test_latest_cycle_supports_completed_cycle_bullet_format() -> None:
+    cycle, date = activity._latest_cycle(
+        "# Cyber Port Continuous Automation Memory\n\n"
+        "- Last run: 2026-04-11T00:41:35Z\n"
+        "- Completed cycle: 102\n"
+        "- Target repo advanced: `/Users/hiagokin/cloud-posture-watch`\n"
+    )
+
+    assert cycle == "Cycle 102"
+    assert date == "2026-04-11"
+
+
 def test_build_activity_block_prefers_newer_concise_automation_cycle(
     monkeypatch, tmp_path
 ) -> None:
@@ -361,6 +373,72 @@ def test_build_activity_block_prefers_newer_concise_automation_cycle(
     assert "**Current focus:** `hiagokinlevi-profile`" in block
     assert "profile activity fallback parser hardening for concise automation memory" in block
     assert "- Added concise automation-memory cycle parsing" in block
+
+
+def test_build_activity_block_supports_bullet_only_automation_memory(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 101** on **2026-04-10**\n\n"
+        "## Cycle 101 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: validation-blocker fallback\n"
+        "- Delivered:\n"
+        "  - Added missing-module detection\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Continuous Automation Memory\n\n"
+        "- Last run: 2026-04-11T00:41:35Z\n"
+        "- Completed cycle: 102\n"
+        "- Target repo advanced: `/Users/hiagokin/cloud-posture-watch`\n"
+        "- Target commit: `0db89fb` (`Add GitHub Actions marketplace entrypoint`)\n"
+        "- Validation: focused action tests passed `51 passed`\n"
+        "- Blockers: central remains diverged `ahead 114, behind 7`; target/profile push still blocked by DNS\n"
+        "- Next target: move to `/Users/hiagokin/secret-leak-sentinel` completion-first\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "secret-leak-sentinel",
+                    "priority_rank": 7,
+                    "open_roadmap_items": 16,
+                    "open_roadmap_preview": [
+                        "Azure SAS tokens and connection strings",
+                        "GCP service account JSON key detection",
+                    ],
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 102, completed on 2026-04-11" in block
+    assert "**Current focus:** `cloud-posture-watch`" in block
+    assert "Validated target commit `0db89fb`" in block
+    assert "focused action tests passed `51 passed`" in block
+    assert "central remains diverged `ahead 114, behind 7`" in block
+    assert "Next completion-first target: `secret-leak-sentinel`." in block
 
 
 def test_build_activity_block_prefers_cycle_blockers_over_stale_status_json(

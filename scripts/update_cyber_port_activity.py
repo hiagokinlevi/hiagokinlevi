@@ -46,13 +46,21 @@ def _latest_cycle(memory_text: str) -> tuple[str, str]:
         return match.group(1), match.group(2)
 
     concise_cycle = re.search(r"Completed (Cycle \d+)\b", memory_text)
-    if not concise_cycle:
+    cycle_label = concise_cycle.group(1) if concise_cycle else ""
+    if not cycle_label:
+        concise_bullet = re.search(r"^- Completed cycle:\s*(\d+)\s*$", memory_text, re.MULTILINE)
+        if concise_bullet:
+            cycle_label = f"Cycle {concise_bullet.group(1)}"
+    if not cycle_label:
         return "Unknown cycle", "unknown date"
 
     runtime = re.search(r"^- Runtime:\s+(\d{4}-\d{2}-\d{2})T", memory_text, re.MULTILINE)
     if runtime:
-        return concise_cycle.group(1), runtime.group(1)
-    return concise_cycle.group(1), "unknown date"
+        return cycle_label, runtime.group(1)
+    last_run = re.search(r"^- Last run:\s+(\d{4}-\d{2}-\d{2})T", memory_text, re.MULTILINE)
+    if last_run:
+        return cycle_label, last_run.group(1)
+    return cycle_label, "unknown date"
 
 
 def _cycle_number(cycle: str) -> int:
@@ -90,7 +98,52 @@ def _cycle_section(memory_text: str, cycle: str) -> str:
     """Return the Markdown section for the latest cycle."""
     pattern = rf"## {re.escape(cycle)} Summary\n(?P<body>.*?)(?=\n## Cycle \d+ Summary|\Z)"
     match = re.search(pattern, memory_text, flags=re.DOTALL)
-    return match.group("body").strip() if match else ""
+    if match:
+        return match.group("body").strip()
+    return _concise_cycle_section(memory_text, cycle)
+
+
+def _concise_cycle_section(memory_text: str, cycle: str) -> str:
+    """Build a synthetic cycle section from concise automation-memory bullets."""
+    if cycle == "Unknown cycle":
+        return ""
+
+    completed = re.search(r"^- Completed cycle:\s*(\d+)\s*$", memory_text, re.MULTILINE)
+    if not completed or f"Cycle {completed.group(1)}" != cycle:
+        return ""
+
+    target = _line_value(memory_text, "Target repo advanced")
+    target_commit = _line_value(memory_text, "Target commit")
+    validation = _line_value(memory_text, "Validation")
+    blockers = _line_value(memory_text, "Blockers")
+    next_target = _line_value(memory_text, "Next target")
+    if not any((target, target_commit, validation, next_target)):
+        return ""
+
+    section_lines = [
+        f"- Target repository: {target or '`cloud-posture-watch`'}",
+        "- Focus area: automated Cyber Port cycle reconciliation and public activity refresh.",
+        "- Delivered:",
+    ]
+    if target_commit:
+        section_lines.append(f"  - Validated target commit {target_commit}")
+    if validation:
+        section_lines.append(f"  - Validation summary: {validation}")
+    if blockers:
+        section_lines.append("- Blockers:")
+        for item in blockers.split("; "):
+            cleaned = item.strip()
+            if cleaned:
+                section_lines.append(f"  - {cleaned}")
+    if next_target:
+        section_lines.append(f"- Next target: {next_target}")
+    return "\n".join(section_lines)
+
+
+def _line_value(text: str, label: str) -> str:
+    """Extract a value from a concise '- Label: value' line."""
+    match = re.search(rf"^- {re.escape(label)}:\s*(.+)$", text, flags=re.MULTILINE)
+    return match.group(1).strip() if match else ""
 
 
 def _first_value(section: str, label: str, default: str) -> str:
@@ -135,6 +188,8 @@ def _read_portfolio_status_json(path: Path | None = None) -> list[dict]:
 def _normalize_repo_name(name: str) -> str:
     """Present repo names without the internal k1n- prefix."""
     cleaned = name.strip().strip("`")
+    if "/" in cleaned:
+        cleaned = cleaned.rstrip("/").split("/")[-1]
     return cleaned[4:] if cleaned.startswith("k1n-") else cleaned
 
 

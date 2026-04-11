@@ -57,5 +57,5 @@ Cyber Port runs as a continuous automatic improvement loop. Each cycle updates t
 - Practical tools with tests, documentation, and repeatable validation.
 - Continuous improvement through numbered Cyber Port cycles.
 - The profile activity updater can fall back to automation memory when central index sync is blocked, keeping the public latest-activity block aligned with the newest validated cycle.
-- The profile activity updater only promotes a cycle after a full `## Cycle N Summary` is present, preventing partial automation writes from surfacing as completed public activity.
+- The profile activity updater accepts either a full `## Cycle N Summary` or the concise automation-memory completion bullets, so the public activity block can stay current before central sync finishes.
 - Public educational value without malware, exploit kits, bypass guidance, or unsafe abuse workflows.
