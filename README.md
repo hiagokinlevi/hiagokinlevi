@@ -7,15 +7,15 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 100, completed on 2026-04-10  
-**Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** offline AWS managed secrets correlation and hardcoded credential hygiene.
+**Last portfolio cycle:** Cycle 101, completed on 2026-04-10  
+**Current focus:** `hiagokinlevi-profile`  
+**Latest validated adjustment:** public activity fallback hardening for stale central next-target metadata.
 
 **What changed recently**
 
-- Added `analyzers.aws_secrets_analyzer` to normalize approved AWS Secrets Manager and SSM Parameter Store inventory plus optional hardcoded credential evidence, correlate credential-like identifiers to managed secret names, and detect plaintext credential-bearing SSM `String` parameters
-- Added `k1n-posture scan-aws-secrets` with severity gating and Markdown report output for hardcoded credentials that duplicate a managed AWS secret, hardcoded credentials that still lack a managed-secret counterpart, and credential-like SSM parameters that remain plaintext
-- Added regression coverage for loader normalization, analyzer matching, CLI gating, and installed-command smoke output; refreshed `README.md`, `ROADMAP.md`, `docs/overview.md`, and `docs/posture-methodology.md`, marking the AWS secrets roadmap item complete
+- Added cycle-summary `Next target` parsing to `scripts/update_cyber_port_activity.py` so the profile activity block can trust the newest completed cycle even when central `portfolio-status.json` is stale.
+- Added regression coverage proving the updater prefers the latest cycle summary over stale central next-target data.
+- Re-ran `python3 /Users/hiagokin/hiagokinlevi-profile/scripts/update_cyber_port_activity.py` so the profile README can promote Cycle 101 from automation memory while the central index remains read-only.
 
 **Portfolio status**
 
@@ -25,7 +25,9 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 
 **Current publish blocker**
 
-- Next target: keep `k1n-cloud-posture-watch` completion-first for the remaining GitHub Actions marketplace action once publication and reconciliation are available.
+- `/Users/hiagokin/k1N-Cyber-Port` remains read-only and diverged (`ahead 112, behind 7`), so conflict-free reconciliation and central status-file updates are still unsafe in this run.
+- `/Users/hiagokin/cloud-posture-watch` remains read-only here, so the final GitHub Actions marketplace action cannot be implemented or published from this run.
+- `/Users/hiagokin/hiagokinlevi-profile` is writable locally, but remote fetch/push remain blocked by `Could not resolve host: github.com`.
 
 
 **Next visible focus**

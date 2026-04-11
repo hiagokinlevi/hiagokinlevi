@@ -157,6 +157,23 @@ def _display_target(target_value: str, next_repo: str) -> str:
     return normalized_target
 
 
+def _section_next_target(section: str) -> str | None:
+    """Extract the next completion-first target from the cycle summary when present."""
+    next_target = _first_value(section, "Next target", "")
+    if not next_target:
+        return None
+
+    backticked = re.findall(r"`([^`]+)`", next_target)
+    if backticked:
+        return _normalize_repo_name(backticked[-1])
+
+    repo_like = re.findall(r"\b(?:k1n-)?[a-z0-9]+(?:-[a-z0-9]+)+\b", next_target.lower())
+    if repo_like:
+        return _normalize_repo_name(repo_like[-1])
+
+    return None
+
+
 def _portfolio_summary_from_json(status_rows: list[dict]) -> tuple[str, str, list[str], str | None]:
     """Extract backlog, next target, visible gaps, and any active publish blocker."""
     if not status_rows:
@@ -210,6 +227,9 @@ def build_activity_block() -> str:
     except (FileNotFoundError, json.JSONDecodeError):
         status_text = _read(STATUS)
         backlog, next_repo, gaps = _portfolio_summary_from_markdown(status_text)
+    section_next_repo = _section_next_target(section)
+    if section_next_repo:
+        next_repo = section_next_repo
     target = _display_target(raw_target, next_repo)
     blocker_lines = _blocker_lines(section, blocker)
 

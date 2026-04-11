@@ -428,3 +428,68 @@ def test_build_activity_block_prefers_cycle_blockers_over_stale_status_json(
     assert "Central and target fetch attempts are blocked by sandbox permissions" in block
     assert "Profile fetch and push remain blocked by `Could not resolve host: github.com`." in block
     assert "Stale blocker text from the older central index." not in block
+
+
+def test_build_activity_block_prefers_cycle_next_target_over_stale_status_json(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 100** on **2026-04-10**\n\n"
+        "## Cycle 100 Summary\n\n"
+        "- Target repository: `k1n-cloud-posture-watch`\n"
+        "- Focus area: offline AWS managed secrets correlation and hardcoded credential hygiene\n"
+        "- Delivered:\n"
+        "  - Added `k1n-posture scan-aws-secrets`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Automation Memory\n\n"
+        "- Runtime: 2026-04-10T23:55:00Z\n"
+        "- Completed Cycle 101 in `hiagokinlevi-profile`: prefer next-target fallback from cycle summaries.\n\n"
+        "## Cycle 101 Summary\n\n"
+        "- Target repository: `hiagokinlevi-profile`\n"
+        "- Focus area: keep the public activity block aligned with the latest blocked cycle state\n"
+        "- Delivered:\n"
+        "  - Added cycle-summary next-target fallback for the profile updater\n"
+        "- Next target: keep `k1n-cloud-posture-watch` completion-first for the remaining GitHub Actions marketplace action once publication and reconciliation are available.\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "secret-leak-sentinel",
+                    "priority_rank": 7,
+                    "open_roadmap_items": 16,
+                    "open_roadmap_preview": [
+                        "JWT token detection",
+                    ],
+                    "last_central_preflight_blocker": "Stale central status picked the wrong next target.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 101, completed on 2026-04-10" in block
+    assert "keep the public activity block aligned with the latest blocked cycle state" in block
+    assert "Next completion-first target: `cloud-posture-watch`." in block
+    assert "Next completion-first target: `secret-leak-sentinel`." not in block
