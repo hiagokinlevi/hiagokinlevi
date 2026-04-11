@@ -7,34 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 102, completed on 2026-04-10  
-**Current focus:** `cloud-posture-watch`  
-**Latest validated adjustment:** Marketplace-ready GitHub Actions execution for scheduled posture workflows.
+**Last portfolio cycle:** Cycle 104, completed on 2026-04-10  
+**Current focus:** `secret-leak-sentinel`  
+**Latest validated adjustment:** cloud credential secret coverage and dependency-light suppression loading.
 
 **What changed recently**
 
-- Added a composite [`action.yml`](action.yml) for `cloud-posture-watch` that sets up Python, installs the package from the action path, validates dedicated provider/output inputs, and publishes resolved command plus latest Markdown/JSON/HTML report paths as GitHub Action outputs
-- Added `scripts/github_action_entrypoint.py` with shell-free subcommand validation, workspace-relative path resolution, report discovery, and explicit blocking of `--provider` / `--output-dir` in free-form action args; added regression coverage in `tests/test_github_action_entrypoint.py`
-- Refreshed `cloud-posture-watch` docs and roadmap to mark the GitHub Actions marketplace action complete; updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 102 records the completed target and rotates the next completion-first target to `k1n-secret-leak-sentinel`
+- Added Azure SAS URL, Azure storage connection string, and GCP service-account JSON key indicator detection to `secret-leak-sentinel`'s primary regex scanner so the shipped CLI now catches those cloud-secret shapes during normal `scan-path`, `scan-staged`, and `scan-git` workflows
+- Hardened `scanners/filesystem_scanner.py` so suppression files still load in dependency-restricted environments when `PyYAML` is absent by falling back to line-based `file:` parsing; added regression coverage for the new detector patterns and real directory-scan coverage
+- Refreshed target README, overview, detection methodology, roadmap, and `.gitignore`; updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 104 records the new target commit, reduced roadmap count, and current blocker state
 
 **Portfolio status**
 
-- Portfolio backlog: 131 open roadmap items across 13 repositories.
+- Portfolio backlog: 129 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `git push origin main` remains blocked in `k1n-cloud-posture-watch`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
-- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 112, behind 7`
-- The central preflight still reports `cloud-posture-watch` validation blocked on missing `yaml` under the default interpreter even though the Miniconda full-suite baseline is green; and several non-target repositories plus the profile repo currently have generated `__pycache__` or `.coverage` artifacts that keep them out of publish-ready status
+- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
+- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 114, behind 7`
+- A fresh offline system `venv` still cannot rebuild the editable install because `setuptools.build_meta` is unavailable there, even though the Miniconda install baseline is now green
 
 
 **Next visible focus**
 
-- Azure SAS tokens and connection strings
-- GCP service account JSON key detection
 - JWT token detection (unsigned or weak-signature JWTs)
+- SSH private key detection (all formats)
+- HashiCorp Vault tokens
 
 **Automation policy**
 
