@@ -7,32 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 101, completed on 2026-04-10  
-**Current focus:** `hiagokinlevi-profile`  
-**Latest validated adjustment:** public activity fallback hardening for stale central next-target metadata.
+**Last portfolio cycle:** Cycle 102, completed on 2026-04-10  
+**Current focus:** `cloud-posture-watch`  
+**Latest validated adjustment:** Marketplace-ready GitHub Actions execution for scheduled posture workflows.
 
 **What changed recently**
 
-- Added cycle-summary `Next target` parsing to `scripts/update_cyber_port_activity.py` so the profile activity block can trust the newest completed cycle even when central `portfolio-status.json` is stale.
-- Added regression coverage proving the updater prefers the latest cycle summary over stale central next-target data.
-- Re-ran `python3 /Users/hiagokin/hiagokinlevi-profile/scripts/update_cyber_port_activity.py` so the profile README can promote Cycle 101 from automation memory while the central index remains read-only.
+- Added a composite [`action.yml`](action.yml) for `cloud-posture-watch` that sets up Python, installs the package from the action path, validates dedicated provider/output inputs, and publishes resolved command plus latest Markdown/JSON/HTML report paths as GitHub Action outputs
+- Added `scripts/github_action_entrypoint.py` with shell-free subcommand validation, workspace-relative path resolution, report discovery, and explicit blocking of `--provider` / `--output-dir` in free-form action args; added regression coverage in `tests/test_github_action_entrypoint.py`
+- Refreshed `cloud-posture-watch` docs and roadmap to mark the GitHub Actions marketplace action complete; updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 102 records the completed target and rotates the next completion-first target to `k1n-secret-leak-sentinel`
 
 **Portfolio status**
 
-- Portfolio backlog: 132 open roadmap items across 13 repositories.
-- Next completion-first target: `cloud-posture-watch`.
+- Portfolio backlog: 131 open roadmap items across 13 repositories.
+- Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `/Users/hiagokin/k1N-Cyber-Port` remains read-only and diverged (`ahead 112, behind 7`), so conflict-free reconciliation and central status-file updates are still unsafe in this run.
-- `/Users/hiagokin/cloud-posture-watch` remains read-only here, so the final GitHub Actions marketplace action cannot be implemented or published from this run.
-- `/Users/hiagokin/hiagokinlevi-profile` is writable locally, but remote fetch/push remain blocked by `Could not resolve host: github.com`.
+- `git push origin main` remains blocked in `k1n-cloud-posture-watch`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
+- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 112, behind 7`
+- The central preflight still reports `cloud-posture-watch` validation blocked on missing `yaml` under the default interpreter even though the Miniconda full-suite baseline is green; and several non-target repositories plus the profile repo currently have generated `__pycache__` or `.coverage` artifacts that keep them out of publish-ready status
 
 
 **Next visible focus**
 
-- GitHub Actions marketplace action
+- Azure SAS tokens and connection strings
+- GCP service account JSON key detection
+- JWT token detection (unsigned or weak-signature JWTs)
 
 **Automation policy**
 
