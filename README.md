@@ -7,32 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 105, completed on 2026-04-10  
-**Current focus:** `cryptologik`  
-**Latest validated adjustment:** language-aware crypto validation and dependency-light CLI resilience.
+**Last portfolio cycle:** Cycle 106, completed on 2026-04-10  
+**Current focus:** `secret-leak-sentinel`  
+**Latest validated adjustment:** SSH private-key format coverage in the regex detector.
 
 **What changed recently**
 
-- Expanded `cryptologik`'s `review-crypto-config` coverage with language-specific validators for Java JCA/JCE misuse, Go `crypto/tls` misconfigurations, and Node.js `node:crypto` anti-patterns, while keeping the existing generic MD5, SHA-1, ECB, DES/3DES, RC4, and weak-PRNG coverage
-- Added deduplication so generic and language-specific detectors no longer double-report the same issue family on the same line, introduced a shimmed `cli/main.py` to keep the historic entrypoint aligned with the canonical CLI source, and added dependency-light fallbacks so the CLI still imports cleanly when `python-dotenv` or `rich` are unavailable
-- Added focused CLI regression coverage, refreshed target README, roadmap, overview, tutorial, and `.gitignore`, then updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 105 records the new target commit, reduced roadmap count, and the restored publication path for the target repository
+- Expanded `secret-leak-sentinel`'s primary regex detector so private-key coverage now flags encrypted PKCS#8 PEM headers, SSH.com `SSH2` private-key blocks, and PuTTY `.ppk` headers alongside the existing PEM and OpenSSH key-header detection
+- Added focused regression coverage for encrypted PKCS#8, SSH2, and PuTTY private-key headers plus a negative test for PuTTY public-key exports to keep the detector precise
+- Refreshed target README, overview, detection methodology, and roadmap so the new SSH coverage is documented consistently; then updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 106 records the new target commit, reduced roadmap count, and the next completion-first target
 
 **Portfolio status**
 
-- Portfolio backlog: 128 open roadmap items across 13 repositories.
+- Portfolio backlog: 127 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `k1N-Cyber-Port` still requires manual reconciliation before any safe direct push to `origin/main`
+- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
+- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 117, behind 7`
+- The default interpreter still cannot run the `secret_leak_sentinel_cli` module directly because `python-dotenv` is absent there
 
 
 **Next visible focus**
 
 - JWT token detection (unsigned or weak-signature JWTs)
-- SSH private key detection (all formats)
 - HashiCorp Vault tokens
+- Deep git log scan (all commits in history, not just current tree)
 
 **Automation policy**
 
