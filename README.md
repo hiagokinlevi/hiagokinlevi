@@ -7,34 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 112, completed on 2026-04-11  
+**Last portfolio cycle:** Cycle 116, completed on 2026-04-11  
 **Current focus:** `secret-leak-sentinel`  
-**Latest validated adjustment:** complete the git-history roadmap track with a real CLI entrypoint, accurate commit-introduction attribution, and safer live-runtime behavior.
+**Latest validated adjustment:** close the dotenv severity-escalation roadmap item without overstating placeholder environment templates.
 
 **What changed recently**
 
-- Added a shipped `scan-git-history` CLI command that prints commit, author, file, line, rule, and masked evidence for historical secret findings and can emit JSON for automation
-- Hardened `scanners/git_history_scanner.py` so live scans walk commits in chronological order, inspect only added lines from commit patches, and skip rescanning unchanged content through blob-level and path-aware content deduplication
-- Added focused regression coverage for the new CLI path, added-line diff parsing, and blob/content dedup behavior, then refreshed the target README, roadmap, and overview docs so the completed git-history capabilities and CC BY 4.0 baseline are reflected in public project text
+- Hardened `classifiers/criticality_classifier.py` so live dotenv-family files such as `.env`, `.env.local`, `.env.production`, and `config.env` are treated as high-risk secret stores even when their suffix is not literally `.env`
+- Explicitly excluded placeholder dotenv filenames such as `.env.example`, `.env.sample`, and `.env.template` from automatic escalation so documentation and sample templates do not get promoted to `CRITICAL` by filename alone
+- Added dedicated classifier regressions for live dotenv variants, named `*.env` files, placeholder dotenv examples, and sample-context placeholders, then refreshed the target README, detection methodology, and roadmap to record the completed item
 
 **Portfolio status**
 
-- Portfolio backlog: 125 open roadmap items across 13 repositories.
+- Portfolio backlog: 120 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
+- `git push origin main` remains blocked in `secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
 - `k1N-Cyber-Port` remains locally diverged from `origin/main`, so direct central publication is still unsafe even after the new target commit
-- The maintained Miniconda runtime still lacks `GitPython`, so live `scan-git-history` execution needs that dependency restored before history scans can run end-to-end in this environment
+- The central workspace still carries unrelated local `CODE_OF_CONDUCT.md` and `SECURITY.md` edits that should stay out of this cycle's index commit
 
 
 **Next visible focus**
 
 - VS Code extension (calls CLI and surfaces findings inline)
-- Pre-push hook in addition to pre-commit
-- GitHub Actions marketplace action
+- ML-based classifier to reduce false positive rate on entropy findings
+- Context-aware analysis (is the file a test fixture? a documentation example?)
 
 **Automation policy**
 
