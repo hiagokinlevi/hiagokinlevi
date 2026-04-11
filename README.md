@@ -2,7 +2,16 @@
 
 Cyber Ops since 2007. I build defensive security tooling for incident response, DFIR, IAM, AppSec, cloud posture, detection engineering, AI security, containers, secrets, WAFs, phishing monitoring, and applied cryptography.
 
+My official website is [hiagokinlevi.github.io](https://hiagokinlevi.github.io/).
+
 My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cyber-Port): a 13-repository defensive security ecosystem released under CC BY 4.0.
+
+## Official Links
+
+- Website: [hiagokinlevi.github.io](https://hiagokinlevi.github.io/)
+- GitHub profile: [github.com/hiagokinlevi](https://github.com/hiagokinlevi)
+- LinkedIn: [br.linkedin.com/in/hiagokinlevi](https://br.linkedin.com/in/hiagokinlevi)
+- Portfolio index: [Cyber Port](https://github.com/hiagokinlevi/Cyber-Port)
 
 ## Cyber Port Live Activity
 
