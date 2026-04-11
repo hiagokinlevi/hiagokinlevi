@@ -7,27 +7,26 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 104, completed on 2026-04-10  
-**Current focus:** `secret-leak-sentinel`  
-**Latest validated adjustment:** cloud credential secret coverage and dependency-light suppression loading.
+**Last portfolio cycle:** Cycle 105, completed on 2026-04-10  
+**Current focus:** `cryptologik`  
+**Latest validated adjustment:** language-aware crypto validation and dependency-light CLI resilience.
 
 **What changed recently**
 
-- Added Azure SAS URL, Azure storage connection string, and GCP service-account JSON key indicator detection to `secret-leak-sentinel`'s primary regex scanner so the shipped CLI now catches those cloud-secret shapes during normal `scan-path`, `scan-staged`, and `scan-git` workflows
-- Hardened `scanners/filesystem_scanner.py` so suppression files still load in dependency-restricted environments when `PyYAML` is absent by falling back to line-based `file:` parsing; added regression coverage for the new detector patterns and real directory-scan coverage
-- Refreshed target README, overview, detection methodology, roadmap, and `.gitignore`; updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 104 records the new target commit, reduced roadmap count, and current blocker state
+- Expanded `cryptologik`'s `review-crypto-config` coverage with language-specific validators for Java JCA/JCE misuse, Go `crypto/tls` misconfigurations, and Node.js `node:crypto` anti-patterns, while keeping the existing generic MD5, SHA-1, ECB, DES/3DES, RC4, and weak-PRNG coverage
+- Added deduplication so generic and language-specific detectors no longer double-report the same issue family on the same line, introduced a shimmed `cli/main.py` to keep the historic entrypoint aligned with the canonical CLI source, and added dependency-light fallbacks so the CLI still imports cleanly when `python-dotenv` or `rich` are unavailable
+- Added focused CLI regression coverage, refreshed target README, roadmap, overview, tutorial, and `.gitignore`, then updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 105 records the new target commit, reduced roadmap count, and the restored publication path for the target repository
 
 **Portfolio status**
 
-- Portfolio backlog: 129 open roadmap items across 13 repositories.
+- Portfolio backlog: 128 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
-- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 114, behind 7`
-- A fresh offline system `venv` still cannot rebuild the editable install because `setuptools.build_meta` is unavailable there, even though the Miniconda install baseline is now green
+- `k1N-Cyber-Port` still requires manual reconciliation before any safe direct push to `origin/main`
+- `/Users/hiagokin/hiagokinlevi-profile` is still `ahead 16`, so the public activity profile should be refreshed and published after the central index summary is committed
 
 
 **Next visible focus**
