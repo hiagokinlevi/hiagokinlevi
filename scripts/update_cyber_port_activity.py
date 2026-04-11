@@ -52,6 +52,10 @@ def _latest_cycle(memory_text: str) -> tuple[str, str]:
         if concise_bullet:
             cycle_label = f"Cycle {concise_bullet.group(1)}"
     if not cycle_label:
+        rich_cycles = [int(item) for item in re.findall(r"\bCycle (\d+)\b", memory_text)]
+        if rich_cycles:
+            cycle_label = f"Cycle {max(rich_cycles)}"
+    if not cycle_label:
         return "Unknown cycle", "unknown date"
 
     runtime = re.search(r"^- Runtime:\s+(\d{4}-\d{2}-\d{2})T", memory_text, re.MULTILINE)
@@ -60,6 +64,9 @@ def _latest_cycle(memory_text: str) -> tuple[str, str]:
     last_run = re.search(r"^- Last run:\s+(\d{4}-\d{2}-\d{2})T", memory_text, re.MULTILINE)
     if last_run:
         return cycle_label, last_run.group(1)
+    rich_run_time = re.search(r"^- Run time:\s+(\d{4}-\d{2}-\d{2})\s", memory_text, re.MULTILINE)
+    if rich_run_time:
+        return cycle_label, rich_run_time.group(1)
     return cycle_label, "unknown date"
 
 
@@ -100,7 +107,10 @@ def _cycle_section(memory_text: str, cycle: str) -> str:
     match = re.search(pattern, memory_text, flags=re.DOTALL)
     if match:
         return match.group("body").strip()
-    return _concise_cycle_section(memory_text, cycle)
+    concise = _concise_cycle_section(memory_text, cycle)
+    if concise:
+        return concise
+    return _rich_run_cycle_section(memory_text, cycle)
 
 
 def _concise_cycle_section(memory_text: str, cycle: str) -> str:
@@ -140,10 +150,71 @@ def _concise_cycle_section(memory_text: str, cycle: str) -> str:
     return "\n".join(section_lines)
 
 
+def _rich_run_cycle_section(memory_text: str, cycle: str) -> str:
+    """Build a synthetic cycle section from the richer automation-memory format."""
+    if cycle == "Unknown cycle" or "## What This Run Did" not in memory_text:
+        return ""
+
+    rich_cycles = [int(item) for item in re.findall(r"\bCycle (\d+)\b", memory_text)]
+    if not rich_cycles or f"Cycle {max(rich_cycles)}" != cycle:
+        return ""
+
+    target = _line_value(memory_text, "Active completion-first target") or _line_value(
+        memory_text, "Central index"
+    )
+    cycle_mode = _line_value(memory_text, "Cycle mode")
+    delivered = _bullets_under_heading(memory_text, "What This Run Did", limit=4)
+    blockers = _bullets_under_heading(memory_text, "Blockers", limit=4)
+    next_target = _bullets_under_heading(memory_text, "Next Target", limit=1)
+    validation = _bullets_under_heading(memory_text, "Validation", limit=2)
+    if not any((target, delivered, blockers, next_target, validation)):
+        return ""
+
+    section_lines = [
+        f"- Target repository: {target or '`k1N-Cyber-Port`'}",
+        "- Focus area: "
+        + (
+            cycle_mode.replace("-", " ")
+            if cycle_mode
+            else "automated Cyber Port cycle reconciliation and public activity refresh"
+        ),
+        "- Delivered:",
+    ]
+    for item in delivered:
+        section_lines.append(f"  - {item}")
+    for item in validation:
+        section_lines.append(f"  - Validation summary: {item}")
+    if blockers:
+        section_lines.append("- Blockers:")
+        for item in blockers:
+            section_lines.append(f"  - {item}")
+    if next_target:
+        section_lines.append(f"- Next target: {next_target[0]}")
+    return "\n".join(section_lines)
+
+
 def _line_value(text: str, label: str) -> str:
     """Extract a value from a concise '- Label: value' line."""
     match = re.search(rf"^- {re.escape(label)}:\s*(.+)$", text, flags=re.MULTILINE)
     return match.group(1).strip() if match else ""
+
+
+def _bullets_under_heading(text: str, heading: str, limit: int = 4) -> list[str]:
+    """Collect direct bullets from a top-level Markdown heading section."""
+    match = re.search(
+        rf"## {re.escape(heading)}\n(?P<body>.*?)(?=\n## |\Z)",
+        text,
+        flags=re.DOTALL,
+    )
+    if not match:
+        return []
+    bullets: list[str] = []
+    for line in match.group("body").splitlines():
+        if line.startswith("- "):
+            bullets.append(line[2:].strip())
+        if len(bullets) >= limit:
+            break
+    return bullets
 
 
 def _first_value(section: str, label: str, default: str) -> str:

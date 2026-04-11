@@ -7,27 +7,27 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 106, completed on 2026-04-10  
+**Last portfolio cycle:** Cycle 109, completed on 2026-04-11  
 **Current focus:** `secret-leak-sentinel`  
-**Latest validated adjustment:** SSH private-key format coverage in the regex detector.
+**Latest validated adjustment:** skip guaranteed `FETCH_HEAD` permission failures when `--fetch` is requested from read-only repository checkouts.
 
 **What changed recently**
 
-- Expanded `secret-leak-sentinel`'s primary regex detector so private-key coverage now flags encrypted PKCS#8 PEM headers, SSH.com `SSH2` private-key blocks, and PuTTY `.ppk` headers alongside the existing PEM and OpenSSH key-header detection
-- Added focused regression coverage for encrypted PKCS#8, SSH2, and PuTTY private-key headers plus a negative test for PuTTY public-key exports to keep the detector precise
-- Refreshed target README, overview, detection methodology, and roadmap so the new SSH coverage is documented consistently; then updated the central `README.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 106 records the new target commit, reduced roadmap count, and the next completion-first target
+- Hardened central `scripts/repository_publish_preflight.py` so it now resolves linked-worktree git metadata paths before writability checks, which keeps the preflight accurate for normal repositories and pointer-based worktrees
+- Taught the fetch path to skip attempts when the resolved git metadata directory is not writable, recording `fetch-skipped-read-only-git-dir` instead of retrying a fetch that cannot create `FETCH_HEAD`
+- Added focused regression coverage for linked `.git` pointer resolution, skipped-fetch blocker classification, and next-action routing, then refreshed central `README.md`, `ROADMAP.md`, `STANDARDS.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 109 records the new fallback behavior while preserving `secret-leak-sentinel` as the next real target
 
 **Portfolio status**
 
-- Portfolio backlog: 127 open roadmap items across 13 repositories.
+- Portfolio backlog: 131 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
-- `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
-- Central reconciliation remains unsafe while `k1N-Cyber-Port` is still `ahead 117, behind 7`
-- The default interpreter still cannot run the `secret_leak_sentinel_cli` module directly because `python-dotenv` is absent there
+- `git fetch`/`git push` against GitHub still cannot complete safely from the central index because outbound DNS remains unavailable and `k1N-Cyber-Port` is still `ahead 119, behind 8`
+- `secret-leak-sentinel` and `/Users/hiagokin/hiagokinlevi-profile` remain read-only from this run, so target edits, target commits, and the required profile README activity refresh cannot be written back here
+- The active target checkout is also already dirty, which keeps it out of read-only validation mode in the current sandbox
 
 
 **Next visible focus**
@@ -57,5 +57,5 @@ Cyber Port runs as a continuous automatic improvement loop. Each cycle updates t
 - Practical tools with tests, documentation, and repeatable validation.
 - Continuous improvement through numbered Cyber Port cycles.
 - The profile activity updater can fall back to automation memory when central index sync is blocked, keeping the public latest-activity block aligned with the newest validated cycle.
-- The profile activity updater accepts either a full `## Cycle N Summary` or the concise automation-memory completion bullets, so the public activity block can stay current before central sync finishes.
+- The profile activity updater accepts a full `## Cycle N Summary`, concise automation-memory completion bullets, or the richer `## Latest Run` / `## What This Run Did` automation-memory sections, so the public activity block can stay current before central sync finishes.
 - Public educational value without malware, exploit kits, bypass guidance, or unsafe abuse workflows.

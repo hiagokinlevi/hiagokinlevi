@@ -571,3 +571,94 @@ def test_build_activity_block_prefers_cycle_next_target_over_stale_status_json(
     assert "keep the public activity block aligned with the latest blocked cycle state" in block
     assert "Next completion-first target: `cloud-posture-watch`." in block
     assert "Next completion-first target: `secret-leak-sentinel`." not in block
+
+
+def test_latest_cycle_supports_rich_automation_memory_run_time() -> None:
+    cycle, date = activity._latest_cycle(
+        "# Cyber Port Continuous Automation Memory\n\n"
+        "## Latest Run\n\n"
+        "- Run time: 2026-04-11 00:42:09 -0300\n"
+        "- Cycle mode: central-fallback after target read-only validation\n\n"
+        "## What This Run Did\n\n"
+        "- Synced central files for Cycle 109.\n"
+    )
+
+    assert cycle == "Cycle 109"
+    assert date == "2026-04-11"
+
+
+def test_build_activity_block_supports_rich_automation_memory_sections(
+    monkeypatch, tmp_path
+) -> None:
+    profile_readme = tmp_path / "README.md"
+    memory = tmp_path / "MEMORY.md"
+    automation_memory = tmp_path / "automation-memory.md"
+    status_json = tmp_path / "portfolio-status.json"
+
+    profile_readme.write_text(
+        "before\n<!-- CYBER_PORT_ACTIVITY:START -->old<!-- CYBER_PORT_ACTIVITY:END -->\nafter\n",
+        encoding="utf-8",
+    )
+    memory.write_text(
+        "# Portfolio Memory\n\n"
+        "## Current Status\n\n"
+        "- Last completed cycle: **Cycle 108** on **2026-04-11**\n\n"
+        "## Cycle 108 Summary\n\n"
+        "- Target repository: `k1n-cryptologik`\n"
+        "- Focus area: advanced crypto agility and PQC planning\n"
+        "- Delivered:\n"
+        "  - Added `assess-crypto-agility`\n",
+        encoding="utf-8",
+    )
+    automation_memory.write_text(
+        "# Cyber Port Continuous Automation Memory\n\n"
+        "## Latest Run\n\n"
+        "- Run time: 2026-04-11 00:42:09 -0300\n"
+        "- Cycle mode: central-fallback after target read-only validation\n"
+        "- Central index: `/Users/hiagokin/k1N-Cyber-Port`\n"
+        "- Active completion-first target: `secret-leak-sentinel`\n\n"
+        "## What This Run Did\n\n"
+        "- Revalidated `secret-leak-sentinel` and documented Cycle 109 blocker state.\n"
+        "- Hardened the profile updater to parse rich automation-memory sections.\n\n"
+        "## Validation\n\n"
+        "- `python -m pytest -q tests/test_update_cyber_port_activity.py` -> passed\n\n"
+        "## Blockers\n\n"
+        "- Central and target fetch attempts are blocked opening `.git/FETCH_HEAD`.\n"
+        "- Profile fetch and push remain blocked by `Could not resolve host: github.com`.\n\n"
+        "## Next Target\n\n"
+        "- Keep `k1n-secret-leak-sentinel` completion-first for JWT token detection.\n\n"
+        "Cycle 109\n",
+        encoding="utf-8",
+    )
+    status_json.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "secret-leak-sentinel",
+                    "priority_rank": 7,
+                    "open_roadmap_items": 13,
+                    "open_roadmap_preview": [
+                        "JWT token detection",
+                        "HashiCorp Vault tokens",
+                    ],
+                    "last_central_preflight_blocker": "Stale blocker text from the older central index.",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    monkeypatch.setattr(activity, "PROFILE_README", profile_readme)
+    monkeypatch.setattr(activity, "MEMORY", memory)
+    monkeypatch.setattr(activity, "AUTOMATION_MEMORY", automation_memory)
+    monkeypatch.setattr(activity, "STATUS_JSON", status_json)
+
+    block = activity.build_activity_block()
+
+    assert "**Last portfolio cycle:** Cycle 109, completed on 2026-04-11" in block
+    assert "**Current focus:** `secret-leak-sentinel`" in block
+    assert "central fallback after target read only validation" in block
+    assert "Hardened the profile updater to parse rich automation-memory sections." in block
+    assert "Validation summary" in block
+    assert "Central and target fetch attempts are blocked opening `.git/FETCH_HEAD`." in block
+    assert "Next completion-first target: `secret-leak-sentinel`." in block
