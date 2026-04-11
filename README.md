@@ -26,7 +26,6 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 **Current publish blocker**
 
 - `k1N-Cyber-Port` still requires manual reconciliation before any safe direct push to `origin/main`
-- `/Users/hiagokin/hiagokinlevi-profile` is still `ahead 16`, so the public activity profile should be refreshed and published after the central index summary is committed
 
 
 **Next visible focus**
