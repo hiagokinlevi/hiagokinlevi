@@ -7,34 +7,34 @@ My current public portfolio is [Cyber Port](https://github.com/hiagokinlevi/Cybe
 ## Cyber Port Live Activity
 
 <!-- CYBER_PORT_ACTIVITY:START -->
-**Last portfolio cycle:** Cycle 110, completed on 2026-04-11  
+**Last portfolio cycle:** Cycle 112, completed on 2026-04-11  
 **Current focus:** `secret-leak-sentinel`  
-**Latest validated adjustment:** detect JWT bearer tokens that are unsigned or rely on HMAC signing, while preserving narrow false-positive control.
+**Latest validated adjustment:** complete the git-history roadmap track with a real CLI entrypoint, accurate commit-introduction attribution, and safer live-runtime behavior.
 
 **What changed recently**
 
-- Added `jwt_weak_or_unsigned` coverage to `secret-leak-sentinel`'s primary regex detector, then base64url-decodes JWT headers so only `alg: none` and `HS256` / `HS384` / `HS512` bearer tokens are emitted as findings
-- Added focused regression coverage for unsigned JWTs, HMAC-signed JWTs, invalid JWT headers, RS256 exclusions, and masked excerpts, then refreshed the target README, roadmap, and detection methodology docs
-- Updated the central `README.md`, `MEMORY.md`, `ROADMAP.md`, `PORTFOLIO_STATUS.md`, and `portfolio-status.json` so Cycle 110 records the new target commit, reduced roadmap count, and the next completion-first target while preserving the CC BY 4.0 baseline
+- Added a shipped `scan-git-history` CLI command that prints commit, author, file, line, rule, and masked evidence for historical secret findings and can emit JSON for automation
+- Hardened `scanners/git_history_scanner.py` so live scans walk commits in chronological order, inspect only added lines from commit patches, and skip rescanning unchanged content through blob-level and path-aware content deduplication
+- Added focused regression coverage for the new CLI path, added-line diff parsing, and blob/content dedup behavior, then refreshed the target README, roadmap, and overview docs so the completed git-history capabilities and CC BY 4.0 baseline are reflected in public project text
 
 **Portfolio status**
 
-- Portfolio backlog: 130 open roadmap items across 13 repositories.
+- Portfolio backlog: 125 open roadmap items across 13 repositories.
 - Next completion-first target: `secret-leak-sentinel`.
 - License baseline: CC BY 4.0 with attribution.
 
 **Current publish blocker**
 
 - `git push origin main` remains blocked in `k1n-secret-leak-sentinel`, `k1N-Cyber-Port`, and `/Users/hiagokin/hiagokinlevi-profile` because outbound GitHub DNS is unavailable
-- `k1N-Cyber-Port` still remains locally diverged from `origin/main` (`ahead 119, behind 8`), so direct central publication is unsafe even after the new target commit
-- The default-interpreter `python3 -m secret_leak_sentinel_cli list-detectors` path still lacks `python-dotenv`, so the maintained Miniconda runtime remains the trusted CLI validation baseline here
+- `k1N-Cyber-Port` remains locally diverged from `origin/main`, so direct central publication is still unsafe even after the new target commit
+- The maintained Miniconda runtime still lacks `GitPython`, so live `scan-git-history` execution needs that dependency restored before history scans can run end-to-end in this environment
 
 
 **Next visible focus**
 
-- HashiCorp Vault tokens
-- Deep git log scan (all commits in history, not just current tree)
-- Blob deduplication to avoid rescanning unchanged file content
+- VS Code extension (calls CLI and surfaces findings inline)
+- Pre-push hook in addition to pre-commit
+- GitHub Actions marketplace action
 
 **Automation policy**
 
