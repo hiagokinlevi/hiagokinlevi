@@ -16,6 +16,10 @@ The [curriculum](https://github.com/hiagokinlevi/OpenCyberAcademy/blob/main/COUR
 
 To see an authored course, start with [rapid Incident Response in English](https://opencyber.academy/courses/rapid-1-month/incident-response-resilience/?lang=en). To study entirely from the repository, follow the [study path](https://github.com/hiagokinlevi/OpenCyberAcademy/blob/main/STUDY_PATH.md).
 
+## Book
+
+**[Confronto Cibernético](https://confrontocibernetico.com.br/)** examines the response to advanced persistent threats (APTs). It connects incident investigation, digital forensics, containment and tactical intelligence, and introduces a coordinated defensive “black team” approach. [Explore the book and its editions](https://confrontocibernetico.com.br/).
+
 ## Research
 
 - **[DAI — Decripte Artificial Intelligence](https://github.com/hiagokinlevi/DAI-Decripte-Artificial-Intelligence-LLM):** research on a cybersecurity language model with authority separated from model output, independent verification and reviewable evidence. [Research paper](https://doi.org/10.5281/zenodo.23089652).
